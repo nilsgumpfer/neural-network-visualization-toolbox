@@ -1,87 +1,87 @@
 function createText(text, x, y) {
-	group = new THREE.Group();
-	group.position.x = x;
-	group.position.y = y;
-	group.name = 'text';
-	scene.add( group );
+    group = new THREE.Group();
+    group.position.x = x;
+    group.position.y = y;
+    group.name = 'text';
+    scene.add(group);
 
-	material = new THREE.MeshFaceMaterial( [ 
-		new THREE.MeshPhongMaterial( { color: 0xFFFFFF, shading: THREE.FlatShading } ), // front
-		new THREE.MeshPhongMaterial( { color: 0xFFFFFF, shading: THREE.SmoothShading } ) // side
-	]);
-	
-	textGeo = new THREE.TextGeometry( text, {
+    material = new THREE.MeshFaceMaterial([
+        new THREE.MeshPhongMaterial({color: 0xFFFFFF, shading: THREE.FlatShading}), // front
+        new THREE.MeshPhongMaterial({color: 0xFFFFFF, shading: THREE.SmoothShading}) // side
+    ]);
 
-		size: size,
-		height: height,
-		curveSegments: curveSegments,
+    textGeo = new THREE.TextGeometry(text, {
 
-		font: font,
-		weight: weight,
-		style: style,
+        size: size,
+        height: height,
+        curveSegments: curveSegments,
 
-		bevelThickness: bevelThickness,
-		bevelSize: bevelSize,
-		bevelEnabled: bevelEnabled,
+        font: font,
+        weight: weight,
+        style: style,
 
-		material: 1,
-		extrudeMaterial: 1
+        bevelThickness: bevelThickness,
+        bevelSize: bevelSize,
+        bevelEnabled: bevelEnabled,
 
-	});
+        material: 1,
+        extrudeMaterial: 1
 
-	textGeo.computeBoundingBox();
-	textGeo.computeVertexNormals();
+    });
 
-	if ( ! bevelEnabled ) {
+    textGeo.computeBoundingBox();
+    textGeo.computeVertexNormals();
 
-		var triangleAreaHeuristics = 0.1 * ( height * size );
+    if (!bevelEnabled) {
 
-		for ( var i = 0; i < textGeo.faces.length; i ++ ) {
-			
-			var face = textGeo.faces[ i ];
+        var triangleAreaHeuristics = 0.1 * (height * size);
 
-			if ( face.materialIndex == 1 ) {
+        for (var i = 0; i < textGeo.faces.length; i++) {
 
-				for ( var j = 0; j < face.vertexNormals.length; j ++ ) {
+            var face = textGeo.faces[i];
 
-					face.vertexNormals[ j ].z = 0;
-					face.vertexNormals[ j ].normalize();
+            if (face.materialIndex == 1) {
 
-				}
+                for (var j = 0; j < face.vertexNormals.length; j++) {
 
-				var va = textGeo.vertices[ face.a ];
-				var vb = textGeo.vertices[ face.b ];
-				var vc = textGeo.vertices[ face.c ];
+                    face.vertexNormals[j].z = 0;
+                    face.vertexNormals[j].normalize();
 
-				var s = THREE.GeometryUtils.triangleArea( va, vb, vc );
+                }
 
-				if ( s > triangleAreaHeuristics ) {
+                var va = textGeo.vertices[face.a];
+                var vb = textGeo.vertices[face.b];
+                var vc = textGeo.vertices[face.c];
 
-					for ( var j = 0; j < face.vertexNormals.length; j ++ ) {
+                var s = THREE.GeometryUtils.triangleArea(va, vb, vc);
 
-						face.vertexNormals[ j ].copy( face.normal );
+                if (s > triangleAreaHeuristics) {
 
-					}
+                    for (var j = 0; j < face.vertexNormals.length; j++) {
 
-				}
+                        face.vertexNormals[j].copy(face.normal);
 
-			}
+                    }
 
-		}
+                }
 
-	}
+            }
 
-	var centerOffset = -0.5 * ( textGeo.boundingBox.max.x - textGeo.boundingBox.min.x );
+        }
 
-	textMesh1 = new THREE.Mesh( textGeo, material );
+    }
 
-	textMesh1.position.x = centerOffset;
-	textMesh1.position.y = hover;
-	textMesh1.position.z = -1;
+    var centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
 
-	textMesh1.rotation.x = 0;
-	textMesh1.rotation.y = Math.PI * 2;
+    textMesh1 = new THREE.Mesh(textGeo, material);
 
-	group.add( textMesh1 );
+    textMesh1.position.x = centerOffset;
+    textMesh1.position.y = hover;
+    textMesh1.position.z = -1;
+
+    textMesh1.rotation.x = 0;
+    textMesh1.rotation.y = Math.PI * 2;
+
+    group.add(textMesh1);
 
 }
