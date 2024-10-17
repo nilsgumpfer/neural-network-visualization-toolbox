@@ -69,7 +69,7 @@
     var finalOutputID = 0;
     var isComputed = false;
     var goodStart = false;
-    var final_weightsa;
+    var final_weights_normalized;
 
     var interID;
     var intersected = false;
@@ -178,41 +178,31 @@
             }
         }
 
+        if (objEdges === undefined)
+            return
+
         objEdges.geometry.dispose();
 
         const lineGeom = new THREE.Geometry();
         lineGeom.dynamic = true;
 
         if (highlightBox.visible) {
-            console.log(interID, layerNum[interID], posInsideLayer[interID]) // TODO: go on here
             if (layerNum[interID] === 1) {
-                for (j = 1; j <= nInputValues; j++) {
-                    let ind_below = j - 1;
-                    let weight = final_weights.e(allNodeNums[interID], allNodeNums[ind_below]);
+                for (j = 0; j < nInputValues; j++) {
+                    let weight = final_weights[j][posInsideLayer[interID]]
+                    let weight_norm = final_weights_normalized[j][posInsideLayer[interID]]
+                    let bias = final_biases[posInsideLayer[interID]]
 
-                    lineGeom.vertices.push(new THREE.Vector3(posX[ind_below], posY[ind_below] + 3, posZ[ind_below]));
-                    lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID] - 3, posZ[interID]));
+                    lineGeom.vertices.push(new THREE.Vector3(posX[j], posY[j], posZ[j]));
+                    lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
 
-                    if (isComputed) {
-                        v = allNodeOutputs[ind_below];
-                        colorNum = math.round(v * 99);
-                        r = redLookup[colorNum];
-                        g = greenLookup[colorNum];
-                        b = blueLookup[colorNum];
-                    } else {
-                        r = 0.5;
-                        g = 0.5;
-                        b = 0.5;
-                    }
+                    colorNum = math.round(weight_norm * 99);
+                    r = redLookup[colorNum];
+                    g = greenLookup[colorNum];
+                    b = blueLookup[colorNum];
 
-                    v = final_weightsa[interID - nInputValues][ind_below];
-                    colorNum = math.round(v * 99);
-                    rw = redLookup[colorNum];
-                    gw = greenLookup[colorNum];
-                    bw = blueLookup[colorNum];
-
-                    colors[vertCount] = new THREE.Color(rw, gw, bw);
-                    vertCount++;
+                    colors[vertCount++] = new THREE.Color(r, g, b);
+                    colors[vertCount++] = new THREE.Color(r, g, b);
                 }
             }
         }

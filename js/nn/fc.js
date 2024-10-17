@@ -1,28 +1,30 @@
 function setupWeightArrays() {
-    let maxWeight, minWeight;
-    //console.log('doing setupWeightarrays');
-    let i, j, weight;
+    final_weights_normalized = normalizeMatrix(final_weights);
 
-    final_weightsa = Create2DArray(nFinalNodes, nInputValues);
-    maxWeight = -100;
-    minWeight = 100;
+    // Flatten the 2D array into a 1D array
+    const flatArray = final_weights_normalized.flat();
 
-    for (i = 1; i <= nFinalNodes; i++) {
-        for (j = 1; j <= nInputValues; j++) {
-            weight = final_weights.e(i, j);
-            if (weight > maxWeight)
-                maxWeight = weight;
-            if (weight < minWeight)
-                minWeight = weight;
-        }
-    }
+    // Get the minimum and maximum values
+    const min = Math.min(...flatArray);
+    const max = Math.max(...flatArray);
+    console.log(min, max);
+}
 
-    for (i = 1; i <= nFinalNodes; i++) {
-        for (j = 1; j <= nInputValues; j++) {
-            weight = final_weights.e(i, j);
-            final_weightsa[i - 1][j - 1] = (weight - minWeight) / (maxWeight - minWeight);
-        }
-    }
+
+function normalizeMatrix(matrix) {
+    // Flatten the 2D array into a 1D array
+    const flatArray = matrix.flat();
+
+    // Get the minimum and maximum values
+    const min = Math.min(...flatArray);
+    const max = Math.max(...flatArray);
+    console.log(min, max);
+
+    // Find the absolute maximum to handle both positive and negative ranges
+    const absMax = Math.max(Math.abs(min), Math.abs(max));
+
+    // Normalize each element in the matrix
+    return matrix.map(row => row.map(value => ((value / absMax) / 2) + 0.5));
 }
 
 
@@ -42,8 +44,8 @@ function getNNOutput() {
     final_outputsa = [0, 0.1, 0.2, 0.3, 0.35, 0.4, 0.45, 0.5, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 0.95, 1];
 
     for (i = 0; i < nFinalNodes; i++) {
-        const weights = final_weights.col(i + 1);
-        const sum = inp.dot(weights) + final_biases.e(i);
+        // const weights = final_weights.col(i + 1);
+        // const sum = inp.dot(weights) + final_biases.e(i);
         // final_outputsa[i] = sigma(sum);
 
         allNodeInputs[nInputValues + i] = final_outputsa[i];
