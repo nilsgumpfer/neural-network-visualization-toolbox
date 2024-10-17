@@ -37,8 +37,16 @@
     <div id="infobox">
         <div id="nodeType"></div>
         <div id="nodeInputContainer">
-            <div class="label">Weighted input:</div>
+            <div class="label">Inputs:</div>
             <div class="math" id="nodeInput"></div>
+        </div>
+        <div id="nodeWeightContainer">
+            <div class="label">Weights:</div>
+            <div class="math" id="nodeWeights"></div>
+        </div>
+        <div id="nodeBiasContainer">
+            <div class="label">Bias:</div>
+            <div class="math" id="nodeBias"></div>
         </div>
         <div id="calcContainer">
             <div class="label">Calculation:</div>
@@ -335,58 +343,32 @@
     }
 
     function updateInfoBox() {
-        var infobox = document.getElementById("infobox");
+        let infobox = document.getElementById("infobox");
 
-        //infobox.style.opacity = 0.9;
-        //console.log('interID = ' + interID);
-        var nodeType;
-        var str;
+        let nodeType;
         if (layerNum[interID] == 0) {
             nodeType = "Input layer";
         } else if (layerNum[interID] == 1) {
             nodeType = "Output layer";
         }
-        $("#nodeType").html(nodeType + ", unit " + allNodeNums[interID]);
+        $("#nodeType").html(nodeType + ", unit " + nodeLabels[interID]);
 
-        if (!allZeroes) {
-            str = allNodeInputs[interID].toFixed(2);
-        } else {
-            str = "0";
+        let weights = []
+        for (let i = 0; i < nInputValues; i++) {
+            weights[i] = final_weights[i][posInsideLayer[interID]].toFixed(1);
         }
-        document.getElementById("nodeInput").textContent = str;
+        let bias = final_biases[0][posInsideLayer[interID]].toFixed(1);
 
-        if (!allZeroes) {
-            str = allNodeOutputsRaw[interID].toFixed(2);
-            if (nodeType == "Output layer" && interID == finalOutputID) {
-                str = str + " (max!)"
-            }
-        } else {
-            str = "0";
-        }
-        document.getElementById("nodeOutput").textContent = str;
-        v = allNodeOutputs[interID];
-        colorNum = math.round(v * 99);
-        r = 0, g = 0, b = 0;
-        g = math.round(greenLookup[colorNum] * 255);
-        b = math.round(blueLookup[colorNum] * 255);
-        var bkgStr = "rgb(" + r + "," + g + "," + b + ")";
-        document.getElementById("nodeOutput").style.color = bkgStr;
+        document.getElementById("nodeInput").textContent = "?";
+        document.getElementById("nodeWeights").textContent = "[" + weights + "]";
+        document.getElementById("nodeBias").textContent = "" + bias;
+        document.getElementById("nodeOutput").textContent = "0";
+        let r = 0;
+        let g = 0;
+        let b = 0;
+        document.getElementById("nodeOutput").style.color = "rgb(" + r + "," + g + "," + b + ")";
+        document.getElementById("calcContainer").textContent = "TODO";
 
-        if (nodeType != "Input layer") {
-            $("#calcContainer").visibility = "visible";
-            if (!allZeroes) {
-                str = "1.7159 tanh (2/3 * " + allNodeInputs[interID].toFixed(2) + " ) = " + allNodeOutputsRaw[interID].toFixed(2);
-            } else {
-                str = "1.7159 tanh (2/3 * 0) = 0";
-            }
-        } else {
-            if (!allZeroes) {
-                str = "(" + allNodeInputs[interID].toFixed(2) + "/255) * 1.275 - 0.1 = " + allNodeOutputsRaw[interID].toFixed(2);
-            } else {
-                str = "none";
-            }
-        }
-        document.getElementById("calc").textContent = str;
 
     }
 

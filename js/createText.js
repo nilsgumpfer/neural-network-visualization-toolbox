@@ -31,16 +31,10 @@ function createText(text, x, y) {
     textGeo.computeBoundingBox();
     textGeo.computeVertexNormals();
 
-    var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
-
     textMesh1 = new THREE.Mesh(textGeo, material);
-
-    textMesh1.position.x = -centerOffset;
+    textMesh1.position.x = -0.55 * textGeo.boundingBox.max.x;
     textMesh1.position.y = 10;
     textMesh1.position.z = -1;
-
-    textMesh1.rotation.x = 0;
-    textMesh1.rotation.y = Math.PI * 2;
 
     group.add(textMesh1);
 

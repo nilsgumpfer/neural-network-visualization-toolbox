@@ -151,6 +151,14 @@ body {
     background-color:#bcd;
     padding: 5px;
 }
+#nodeWeightContainer {
+    background-color:#bcd;
+    padding: 5px;
+}
+#nodeBiasContainer {
+    background-color:#bcd;
+    padding: 5px;
+}
 #calcContainer {	
     background-color:#9ab;
     padding: 5px;
