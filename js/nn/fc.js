@@ -1,28 +1,24 @@
 function setupWeightArrays() {
-    final_weights_normalized = normalizeMatrix(final_weights);
+    const absMax = deriveAbsMax([final_weights, final_biases]);
 
-    // Flatten the 2D array into a 1D array
-    const flatArray = final_weights_normalized.flat();
-
-    // Get the minimum and maximum values
-    const min = Math.min(...flatArray);
-    const max = Math.max(...flatArray);
-    console.log(min, max);
+    final_weights_normalized = normalizeMatrix(final_weights, absMax);
+    final_biases_normalized = normalizeMatrix(final_biases, absMax);
 }
 
 
-function normalizeMatrix(matrix) {
-    // Flatten the 2D array into a 1D array
-    const flatArray = matrix.flat();
+function deriveAbsMax(values) {
+    // Flatten the 3D array into a 1D array
+    const flatArray = values.flat(2);
 
     // Get the minimum and maximum values
     const min = Math.min(...flatArray);
     const max = Math.max(...flatArray);
-    console.log(min, max);
 
-    // Find the absolute maximum to handle both positive and negative ranges
-    const absMax = Math.max(Math.abs(min), Math.abs(max));
+    return Math.max(Math.abs(min), Math.abs(max));
+}
 
+
+function normalizeMatrix(matrix, absMax) {
     // Normalize each element in the matrix
     return matrix.map(row => row.map(value => ((value / absMax) / 2) + 0.5));
 }

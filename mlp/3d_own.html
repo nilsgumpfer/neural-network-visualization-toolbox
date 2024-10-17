@@ -70,6 +70,7 @@
     var isComputed = false;
     var goodStart = false;
     var final_weights_normalized;
+    var final_biases_normalized;
 
     var interID;
     var intersected = false;
@@ -192,6 +193,7 @@
                     let weight = final_weights[j][posInsideLayer[interID]]
                     let weight_norm = final_weights_normalized[j][posInsideLayer[interID]]
                     let bias = final_biases[posInsideLayer[interID]]
+                    let bias_norm = final_biases_normalized[0][posInsideLayer[interID]]
 
                     lineGeom.vertices.push(new THREE.Vector3(posX[j], posY[j], posZ[j]));
                     lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
