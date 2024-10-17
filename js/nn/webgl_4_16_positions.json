@@ -9,7 +9,7 @@
 		"type":"image",
 		"layerNum":0,
 		"posInsideLayer":0,
-		"label": "0"
+		"label": "1"
 	},
 	{
 		"id":1,
@@ -20,7 +20,7 @@
 		"type":"image",
 		"layerNum":0,
 		"posInsideLayer":1,
-		"label": "1"
+		"label": "2"
 	},
 	{
 		"id":2,
@@ -31,7 +31,7 @@
 		"type":"image",
 		"layerNum":0,
 		"posInsideLayer":2,
-		"label": "2"
+		"label": "4"
 	},
 	{
 		"id":3,
@@ -42,7 +42,7 @@
 		"type":"image",
 		"layerNum":0,
 		"posInsideLayer":3,
-		"label": "4"
+		"label": "8"
 	},
 	{
 		"id":4,

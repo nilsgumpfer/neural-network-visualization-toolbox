@@ -10,7 +10,6 @@ function applyVertexColors(g, c) {
         }
 
     });
-    //console.log('applied colors to ' + count + 'vertices');
 
 }
 

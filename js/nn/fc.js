@@ -26,33 +26,21 @@ function normalizeMatrix(matrix, absMax) {
 
 function getNNOutput() {
     allZeroes = false;
-    const data = [0, 0, 1, 0];
     let i;
 
-    for (i = 0; i < data.length; i++) {
-        allNodeInputs[i] = data[i]
-        allNodeOutputs[i] = data[i];
+    for (i = 0; i < nInputValues; i++) {
+        allNodeInputs[i] = input_data[0][i];
+        allNodeOutputs[i] = input_data[0][i];
         allNodeNums[i] = i + 1;
     }
 
-    const inp = Vector.create(data);
-    let final_outputsa = new Array(nFinalNodes);
-    final_outputsa = [0, 0.1, 0.2, 0.3, 0.35, 0.4, 0.45, 0.5, 0.5, 0.55, 0.6, 0.7, 0.8, 0.9, 0.95, 1];
-
     for (i = 0; i < nFinalNodes; i++) {
-        // const weights = final_weights.col(i + 1);
-        // const sum = inp.dot(weights) + final_biases.e(i);
-        // final_outputsa[i] = sigma(sum);
-
-        allNodeInputs[nInputValues + i] = final_outputsa[i];
-        allNodeOutputs[nInputValues + i] = final_outputsa[i];
+        allNodeInputs[nInputValues + i] = final_outputs[0][i];
+        allNodeOutputs[nInputValues + i] = final_outputs[0][i];
         allNodeNums[nInputValues + i] = nInputValues + i + 1;
     }
 
-    allNodeOutputsRaw = allNodeOutputs.slice();
-    // normalizeWithinLayer(allNodeOutputs);
-
-    finalOutputID = maxInd(final_outputsa);
+    finalOutputID = maxInd(final_outputs);
 
     isComputed = true;
 }

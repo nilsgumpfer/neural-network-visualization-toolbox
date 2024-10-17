@@ -73,10 +73,8 @@
     var allNodeNums = new Array(nNodes);
     var allNodeInputs = new Array(nNodes);
     var allNodeOutputs = new Array(nNodes);
-    var allNodeOutputsRaw = new Array(nNodes);
     var finalOutputID = 0;
     var isComputed = false;
-    var goodStart = false;
     var final_weights_normalized;
     var final_biases_normalized;
 
@@ -94,14 +92,10 @@
     var offset = new THREE.Vector3(10, 10, 10);
 
 
-    var outs = "0 1 2 3 4 5 6 7 8 9 10 11 12 13 14 15",
-        ins = "1 2 4 8",
-        height = 1,
+    var height = 1,
         size = 9,
         hover = 60,
-
         curveSegments = 8,
-
         bevelThickness = 2,
         bevelSize = 1.5,
         bevelSegments = 3,
