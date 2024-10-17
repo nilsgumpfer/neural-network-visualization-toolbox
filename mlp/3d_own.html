@@ -75,7 +75,7 @@
     var interID;
     var intersected = false;
 
-    var posX = [], posY = [], posZ = [], layerNum = [], posInsideLayer = [];
+    var posX = [], posY = [], posZ = [], layerNum = [], posInsideLayer = [], nodeLabels = [];
 
     var originalWidth = window.innerWidth;
     var originalHeight = window.innerHeight;
@@ -313,17 +313,25 @@
                 posZ[nodeCount] = node.z;
                 layerNum[nodeCount] = node.layerNum;
                 posInsideLayer[nodeCount] = node.posInsideLayer;
+                nodeLabels[nodeCount] = node.label;
                 nodeCount++;
             });
         }).error(function () {
             console.log('error');
         }).done(function () {
             setupWeightArrays();
-            createText(outs, 0, 0);
-            createText(ins, 0, -130);
+            // createText(outs, 0, 0);
+            drawNodeLabels();
+            // createText(ins, 0, -130);
             drawCubes();
             drawEdges();
         });
+    }
+
+    function drawNodeLabels() {
+        for (i = 0; i < nNodes; i++) {
+            createText(nodeLabels[i], posX[i], posY[i]);
+        }
     }
 
     function updateInfoBox() {

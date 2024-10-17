@@ -11,7 +11,6 @@ function createText(text, x, y) {
     ]);
 
     textGeo = new THREE.TextGeometry(text, {
-
         size: size,
         height: height,
         curveSegments: curveSegments,
@@ -32,51 +31,12 @@ function createText(text, x, y) {
     textGeo.computeBoundingBox();
     textGeo.computeVertexNormals();
 
-    if (!bevelEnabled) {
-
-        var triangleAreaHeuristics = 0.1 * (height * size);
-
-        for (var i = 0; i < textGeo.faces.length; i++) {
-
-            var face = textGeo.faces[i];
-
-            if (face.materialIndex == 1) {
-
-                for (var j = 0; j < face.vertexNormals.length; j++) {
-
-                    face.vertexNormals[j].z = 0;
-                    face.vertexNormals[j].normalize();
-
-                }
-
-                var va = textGeo.vertices[face.a];
-                var vb = textGeo.vertices[face.b];
-                var vc = textGeo.vertices[face.c];
-
-                var s = THREE.GeometryUtils.triangleArea(va, vb, vc);
-
-                if (s > triangleAreaHeuristics) {
-
-                    for (var j = 0; j < face.vertexNormals.length; j++) {
-
-                        face.vertexNormals[j].copy(face.normal);
-
-                    }
-
-                }
-
-            }
-
-        }
-
-    }
-
-    var centerOffset = -0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
+    var centerOffset = 0.5 * (textGeo.boundingBox.max.x - textGeo.boundingBox.min.x);
 
     textMesh1 = new THREE.Mesh(textGeo, material);
 
-    textMesh1.position.x = centerOffset;
-    textMesh1.position.y = hover;
+    textMesh1.position.x = -centerOffset;
+    textMesh1.position.y = 10;
     textMesh1.position.z = -1;
 
     textMesh1.rotation.x = 0;
