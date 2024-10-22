@@ -68,20 +68,23 @@
 
     var nInputValues = 4;
     var nFinalNodes = 16;
-    var nNodes = nInputValues + nFinalNodes;
+    var nNodes = nInputValues + nFinalNodes * 2;
     var allZeroes = true;
     var allNodeNums = new Array(nNodes);
     var allNodeInputs = new Array(nNodes);
     var allNodeOutputs = new Array(nNodes);
+    var allNodeOutputsNormalized = new Array(nNodes);
     var finalOutputID = 0;
     var isComputed = false;
     var final_weights_normalized;
     var final_biases_normalized;
+    var final_outputs_normalized;
+    var input_data_normalized;
 
     var interID;
     var intersected = false;
 
-    var posX = [], posY = [], posZ = [], layerNum = [], posInsideLayer = [], nodeLabels = [];
+    var posX = [], posY = [], posZ = [], layerNum = [], posInsideLayer = [], nodeLabels = [], nodeTypes = [];
 
     var originalWidth = window.innerWidth;
     var originalHeight = window.innerHeight;
@@ -110,7 +113,6 @@
     animate();
 
     function init() {
-
         container = document.getElementById("webgl_container");
 
         camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 5000);
@@ -149,7 +151,6 @@
         renderer.sortObjects = false;
         container.appendChild(renderer.domElement);
 
-
         controls = new THREE.OrbitControls(camera, renderer.domElement);
         controls.target.set(0, 0, 0);
 
@@ -164,6 +165,9 @@
         renderer.domElement.addEventListener('click', onClick);
         renderer.domElement.addEventListener('mouseup', onMouseUp);
         window.addEventListener('resize', onWindowResize, false);
+
+        final_outputs_normalized = normalizeMatrix(final_outputs, deriveAbsMax(final_outputs));
+        input_data_normalized = normalizeMatrix(input_data, deriveAbsMax(input_data));
         getNNOutput();
     }
 
@@ -272,10 +276,10 @@
             intersected = false;
             //}
         }
-        if (highlightBox.visible == true) {
+        if (highlightBox.visible === true) {
             var r, g, b;
             if (isComputed) {
-                var v = allNodeOutputs[interID];
+                var v = allNodeOutputsNormalized[interID];
                 var colorNum = math.round(v * 99);
                 r = redLookup[colorNum];
                 g = greenLookup[colorNum];
@@ -314,6 +318,7 @@
                 posY[nodeCount] = node.y;
                 posZ[nodeCount] = node.z;
                 layerNum[nodeCount] = node.layerNum;
+                nodeTypes[nodeCount] = node.type;
                 posInsideLayer[nodeCount] = node.posInsideLayer;
                 nodeLabels[nodeCount] = node.label;
                 nodeCount++;
@@ -328,6 +333,8 @@
             drawCubes();
             drawEdges();
         });
+
+
     }
 
     function drawNodeLabels() {
@@ -352,11 +359,12 @@
             weights[i] = final_weights[i][posInsideLayer[interID]].toFixed(1);
         }
         let bias = final_biases[0][posInsideLayer[interID]].toFixed(1);
+        let output = final_outputs[0][posInsideLayer[interID]].toFixed(1);
 
         document.getElementById("nodeInput").textContent = "?";
         document.getElementById("nodeWeights").textContent = "[" + weights + "]";
         document.getElementById("nodeBias").textContent = "" + bias;
-        document.getElementById("nodeOutput").textContent = "0";
+        document.getElementById("nodeOutput").textContent = "" + output;
         let r = 0;
         let g = 0;
         let b = 0;

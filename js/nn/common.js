@@ -51,7 +51,7 @@ function drawCubes() {
         matrix.compose(position, quaternion, scale);
 
         if (isComputed) {
-            var v = allNodeOutputs[i];
+            var v = allNodeOutputsNormalized[i];
             var colorNum = math.round(v * 99);
             r = redLookup[colorNum];
             g = greenLookup[colorNum];

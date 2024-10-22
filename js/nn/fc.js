@@ -1,14 +1,25 @@
 function setupWeightArrays() {
-    const absMax = deriveAbsMax([final_weights, final_biases]);
+    const absMax = deriveAbsMax2([final_weights, final_biases]);
 
     final_weights_normalized = normalizeMatrix(final_weights, absMax);
     final_biases_normalized = normalizeMatrix(final_biases, absMax);
 }
 
 
-function deriveAbsMax(values) {
+function deriveAbsMax2(values) {
     // Flatten the 3D array into a 1D array
     const flatArray = values.flat(2);
+
+    // Get the minimum and maximum values
+    const min = Math.min(...flatArray);
+    const max = Math.max(...flatArray);
+
+    return Math.max(Math.abs(min), Math.abs(max));
+}
+
+function deriveAbsMax(values) {
+    // Flatten the 2D array into a 1D array
+    const flatArray = values.flat(1);
 
     // Get the minimum and maximum values
     const min = Math.min(...flatArray);
@@ -31,12 +42,14 @@ function getNNOutput() {
     for (i = 0; i < nInputValues; i++) {
         allNodeInputs[i] = input_data[0][i];
         allNodeOutputs[i] = input_data[0][i];
+        allNodeOutputsNormalized[i] = input_data_normalized[0][i];
         allNodeNums[i] = i + 1;
     }
 
     for (i = 0; i < nFinalNodes; i++) {
         allNodeInputs[nInputValues + i] = final_outputs[0][i];
         allNodeOutputs[nInputValues + i] = final_outputs[0][i];
+        allNodeOutputsNormalized[nInputValues + i] = final_outputs_normalized[0][i];
         allNodeNums[nInputValues + i] = nInputValues + i + 1;
     }
 
