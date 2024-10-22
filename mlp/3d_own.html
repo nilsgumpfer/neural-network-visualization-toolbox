@@ -216,26 +216,25 @@
                 }
             }
             if (layerNum[interID] === 2) {
-                // let value = final_outputs_wo_act[posInsideLayer[interID]]
-                // let value_norm = final_outputs_wo_act_normalized[posInsideLayer[interID]]
-                //
-                // lineGeom.vertices.push(new THREE.Vector3(posX[interID-nFinalNodes], posY[interID-nFinalNodes], posZ[interID-nFinalNodes]));
-                // lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
-                //
-                // colorNum = math.round(weight_norm * 99);
-                // r = redLookup[colorNum];
-                // g = greenLookup[colorNum];
-                // b = blueLookup[colorNum];
-                //
-                // colors[vertCount++] = new THREE.Color(r, g, b);
-                // colors[vertCount++] = new THREE.Color(r, g, b);
+                let value_norm = final_outputs_wo_act_normalized[0][posInsideLayer[interID]]
+
+                lineGeom.vertices.push(new THREE.Vector3(posX[interID-nFinalNodes], posY[interID-nFinalNodes], posZ[interID-nFinalNodes]));
+                lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
+
+                colorNum = math.round(value_norm * 99);
+                r = redLookup[colorNum];
+                g = greenLookup[colorNum];
+                b = blueLookup[colorNum];
+
+                colors[vertCount++] = new THREE.Color(r, g, b);
+                colors[vertCount++] = new THREE.Color(r, g, b);
             }
         }
 
         objEdges.material = new THREE.LineBasicMaterial({
             color: 0xffffff,
             opacity: 1,
-            linewidth: 3,
+            linewidth: 4,
             vertexColors: THREE.VertexColors
         });
 
