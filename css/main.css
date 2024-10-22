@@ -148,15 +148,19 @@ body {
     text-align:center;
 }
 #nodeInputContainer {
-    background-color:#bcd;
+    background-color:#9ab;
     padding: 5px;
 }
 #nodeWeightContainer {
-    background-color:#bcd;
+    background-color:#9ab;
+    padding: 5px;
+}
+#nodeForwardMessageContainer {
+    background-color:#9ab;
     padding: 5px;
 }
 #nodeBiasContainer {
-    background-color:#bcd;
+    background-color:#9ab;
     padding: 5px;
 }
 #calcContainer {	

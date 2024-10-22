@@ -36,22 +36,26 @@
 <div id="webgl_container">
     <div id="infobox">
         <div id="nodeType"></div>
-        <div id="nodeInputContainer">
-            <div class="label">Inputs:</div>
-            <div class="math" id="nodeInput"></div>
-        </div>
         <div id="nodeWeightContainer">
             <div class="label">Weights:</div>
             <div class="math" id="nodeWeights"></div>
+        </div>
+        <div id="nodeForwardMessageContainer">
+            <div class="label">Fwd. Msgs.:</div>
+            <div class="math" id="nodeForwardMessages"></div>
         </div>
         <div id="nodeBiasContainer">
             <div class="label">Bias:</div>
             <div class="math" id="nodeBias"></div>
         </div>
-        <div id="calcContainer">
-            <div class="label">Calculation:</div>
-            <div class="math" id="calc"></div>
-        </div>
+<!--        <div id="nodeInputContainer">-->
+<!--            <div class="label">Input:</div>-->
+<!--            <div class="math" id="nodeInput"></div>-->
+<!--        </div>-->
+<!--        <div id="calcContainer">-->
+<!--            <div class="label">Calculation:</div>-->
+<!--            <div class="math" id="calc"></div>-->
+<!--        </div>-->
         <div id="nodeOutputContainer">
             <div class="label">Output:</div>
             <div class="math" id="nodeOutput"></div>
@@ -116,7 +120,7 @@
     function init() {
         container = document.getElementById("webgl_container");
 
-        camera = new THREE.PerspectiveCamera(60, window.innerWidth / window.innerHeight, 1, 5000);
+        camera = new THREE.PerspectiveCamera(40, window.innerWidth / window.innerHeight, 1, 5000);
         camera.position.z = 500;
 
         scene = new THREE.Scene();
@@ -198,10 +202,7 @@
         if (highlightBox.visible) {
             if (layerNum[interID] === 1) {
                 for (j = 0; j < nInputValues; j++) {
-                    let weight = final_weights[j][posInsideLayer[interID]]
                     let weight_norm = final_weights_normalized[j][posInsideLayer[interID]]
-                    let bias = final_biases[posInsideLayer[interID]]
-                    let bias_norm = final_biases_normalized[0][posInsideLayer[interID]]
 
                     lineGeom.vertices.push(new THREE.Vector3(posX[j], posY[j], posZ[j]));
                     lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
@@ -363,31 +364,44 @@
         let infobox = document.getElementById("infobox");
 
         let nodeType;
-        if (layerNum[interID] == 0) {
+        if (layerNum[interID] === 0) {
             nodeType = "Input layer";
-        } else if (layerNum[interID] == 1) {
-            nodeType = "Output layer";
+        } else if (layerNum[interID] === 1) {
+            nodeType = "Output layer (raw values)";
+        } else if (layerNum[interID] === 2) {
+            nodeType = "Output layer (softmax)";
         }
         $("#nodeType").html(nodeType + ", unit " + nodeLabels[interID]);
 
         let weights = []
-        for (let i = 0; i < nInputValues; i++) {
-            weights[i] = final_weights[i][posInsideLayer[interID]].toFixed(1);
+        if (layerNum[interID] === 1) {
+            for (let i = 0; i < nInputValues; i++) {
+                weights[i] = " " + final_weights[i][posInsideLayer[interID]].toFixed(1);
+            }
         }
-        let bias = final_biases[0][posInsideLayer[interID]].toFixed(1);
-        let output = final_outputs[0][posInsideLayer[interID]].toFixed(1);
+        let forwardMessages = []
+        if (layerNum[interID] === 1){
+            for (let i = 0; i < nInputValues; i++) {
+                forwardMessages[i] = " "+forward_messages[i][posInsideLayer[interID]].toFixed(1);
+            }
+        }
+        let bias;
+        if (layerNum[interID] === 1)
+            bias = final_biases[0][posInsideLayer[interID]].toFixed(1);
+        else
+            bias = "-"
+        // let input = allNodeInputs[interID].toFixed(1);
+        let output = allNodeOutputs[interID].toFixed(1);
 
-        document.getElementById("nodeInput").textContent = "?";
-        document.getElementById("nodeWeights").textContent = "[" + weights + "]";
+        // document.getElementById("nodeInput").textContent = "" + input;
+        document.getElementById("nodeWeights").textContent = "[ " + weights + " ]";
+        document.getElementById("nodeForwardMessages").textContent = "[ " + forwardMessages + " ]";
         document.getElementById("nodeBias").textContent = "" + bias;
         document.getElementById("nodeOutput").textContent = "" + output;
-        let r = 0;
-        let g = 0;
-        let b = 0;
-        document.getElementById("nodeOutput").style.color = "rgb(" + r + "," + g + "," + b + ")";
-        document.getElementById("calcContainer").textContent = "TODO";
-
-
+        // let r = 0;
+        // let g = 0;
+        // let b = 0;
+        // document.getElementById("nodeOutput").style.color = "rgb(" + r + "," + g + "," + b + ")";
     }
 
 </script>
