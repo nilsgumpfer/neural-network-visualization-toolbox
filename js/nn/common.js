@@ -85,7 +85,6 @@ function drawCubes() {
 }
 
 function drawEdges() {
-    //console.log('draw edges');
     var lineMat = new THREE.LineBasicMaterial({
         color: 0x0000ff,
         transparent: true,

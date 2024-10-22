@@ -80,6 +80,7 @@
     var final_biases_normalized;
     var final_outputs_normalized;
     var input_data_normalized;
+    var final_outputs_wo_act_normalized;
 
     var interID;
     var intersected = false;
@@ -167,6 +168,7 @@
         window.addEventListener('resize', onWindowResize, false);
 
         final_outputs_normalized = normalizeMatrix(final_outputs, deriveAbsMax(final_outputs));
+        final_outputs_wo_act_normalized = normalizeMatrix(final_outputs_wo_act, deriveAbsMax(final_outputs_wo_act));
         input_data_normalized = normalizeMatrix(input_data, deriveAbsMax(input_data));
         getNNOutput();
     }
@@ -212,6 +214,21 @@
                     colors[vertCount++] = new THREE.Color(r, g, b);
                     colors[vertCount++] = new THREE.Color(r, g, b);
                 }
+            }
+            if (layerNum[interID] === 2) {
+                // let value = final_outputs_wo_act[posInsideLayer[interID]]
+                // let value_norm = final_outputs_wo_act_normalized[posInsideLayer[interID]]
+                //
+                // lineGeom.vertices.push(new THREE.Vector3(posX[interID-nFinalNodes], posY[interID-nFinalNodes], posZ[interID-nFinalNodes]));
+                // lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
+                //
+                // colorNum = math.round(weight_norm * 99);
+                // r = redLookup[colorNum];
+                // g = greenLookup[colorNum];
+                // b = blueLookup[colorNum];
+                //
+                // colors[vertCount++] = new THREE.Color(r, g, b);
+                // colors[vertCount++] = new THREE.Color(r, g, b);
             }
         }
 

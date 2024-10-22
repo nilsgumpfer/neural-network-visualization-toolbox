@@ -47,10 +47,17 @@ function getNNOutput() {
     }
 
     for (i = 0; i < nFinalNodes; i++) {
-        allNodeInputs[nInputValues + i] = final_outputs[0][i];
-        allNodeOutputs[nInputValues + i] = final_outputs[0][i];
-        allNodeOutputsNormalized[nInputValues + i] = final_outputs_normalized[0][i];
+        allNodeInputs[nInputValues + i] = final_outputs_wo_act[0][i];
+        allNodeOutputs[nInputValues + i] = final_outputs_wo_act[0][i];
+        allNodeOutputsNormalized[nInputValues + i] = final_outputs_wo_act_normalized[0][i];
         allNodeNums[nInputValues + i] = nInputValues + i + 1;
+    }
+
+    for (i = 0; i < nFinalNodes; i++) {
+        allNodeInputs[nInputValues + nFinalNodes + i] = final_outputs[0][i];
+        allNodeOutputs[nInputValues + nFinalNodes + i] = final_outputs[0][i];
+        allNodeOutputsNormalized[nInputValues + nFinalNodes + i] = final_outputs_normalized[0][i];
+        allNodeNums[nInputValues + nFinalNodes + i] = nInputValues + nFinalNodes + i + 1;
     }
 
     finalOutputID = maxInd(final_outputs);
