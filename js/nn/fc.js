@@ -36,7 +36,9 @@ function deriveAbsMax(values) {
 
 
 function normalizeMatrix(matrix, absMax) {
-    // Normalize each element in the matrix
+    if(absMax === 0)
+        absMax = 1
+
     return matrix.map(row => row.map(value => ((value / absMax) / 2) + 0.5));
 }
 
