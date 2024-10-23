@@ -450,7 +450,7 @@
             let weights = []
             if (layerNum[interID] === 1) {
                 for (let i = 0; i < nInputValues; i++) {
-                    weights[i] = " " + final_connections[i][posInsideLayer[interID]].toFixed(1);
+                    weights[i] = " " + final_weights[i][posInsideLayer[interID]].toFixed(1);
                 }
             }
             let forwardMessages = []
