@@ -1,8 +1,14 @@
-function setupConnectionArrays() {
-    final_connections = forward_messages
-
-    const absMax = deriveAbsMax2([final_connections, final_biases]);
-    final_connections_normalized = normalizeMatrix(final_connections, absMax);
+function updateConnectionArrays() {
+    if (weightsDisplayed) {
+        const absMax = deriveAbsMax2([final_connections, final_biases]);
+        final_connections_normalized = normalizeMatrix(final_connections, absMax);
+    }
+    else {
+        final_connections_normalized = normalizeMatrix(final_connections, deriveAbsMax(final_connections));
+    }
+    final_outputs_normalized = normalizeMatrix(final_outputs, deriveAbsMax(final_outputs));
+    final_outputs_wo_act_normalized = normalizeMatrix(final_outputs_wo_act, deriveAbsMax(final_outputs_wo_act));
+    input_data_normalized = normalizeMatrix(input_data, deriveAbsMax(input_data));
 }
 
 
@@ -36,6 +42,8 @@ function normalizeMatrix(matrix, absMax) {
 
 
 function getNNOutput() {
+    updateArrays();
+
     allZeroes = false;
     let i;
 

@@ -1,4 +1,4 @@
-function createText(text, x, y) {
+function createText(text, x, y, textsize=9) {
     group = new THREE.Group();
     group.position.x = x;
     group.position.y = y;
@@ -11,7 +11,7 @@ function createText(text, x, y) {
     ]);
 
     textGeo = new THREE.TextGeometry(text, {
-        size: size,
+        size: textsize,
         height: height,
         curveSegments: curveSegments,
 
@@ -38,4 +38,5 @@ function createText(text, x, y) {
 
     group.add(textMesh1);
 
+    return group;
 }

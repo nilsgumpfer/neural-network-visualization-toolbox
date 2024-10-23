@@ -81,11 +81,15 @@
     var finalOutputID = 0;
     var isComputed = false;
     var weightsDisplayed = false;
+    var selectedCase = 1;
     var final_connections;
     var final_connections_normalized;
     var final_outputs_normalized;
     var input_data_normalized;
     var final_outputs_wo_act_normalized;
+
+    var weightText;
+    var fwdMsgText;
 
     var interID;
     var intersected = false;
@@ -176,7 +180,19 @@
                     final_connections = final_weights;
                     weightsDisplayed = true;
                 }
-                final_connections_normalized = normalizeMatrix(final_connections, deriveAbsMax(final_connections));
+                updateConnectionArrays();
+            }
+            else if (event.key === 'e' || event.key === 'E') {
+                if (selectedCase < 15)
+                    selectedCase++;
+                getNNOutput();
+                updateCubes();
+            }
+            else if (event.key === 'q' || event.key === 'Q') {
+                if (selectedCase > 0)
+                    selectedCase--;
+                getNNOutput();
+                updateCubes();
             }
         });
 
@@ -186,10 +202,42 @@
         renderer.domElement.addEventListener('mouseup', onMouseUp);
         window.addEventListener('resize', onWindowResize, false);
 
-        final_outputs_normalized = normalizeMatrix(final_outputs, deriveAbsMax(final_outputs));
-        final_outputs_wo_act_normalized = normalizeMatrix(final_outputs_wo_act, deriveAbsMax(final_outputs_wo_act));
-        input_data_normalized = normalizeMatrix(input_data, deriveAbsMax(input_data));
+        weightText = createText("weights", 100, -20, 6);
+        weightText.visible = false;
+        fwdMsgText = createText("forward messages", 110, -20, 6);
+        fwdMsgText.visible = false;
+
+        selectCase();
+        final_connections = forward_messages;
+
         getNNOutput();
+    }
+
+    function updateArrays() {
+        selectCase();
+        if (weightsDisplayed) {
+            final_connections = final_weights;
+        }
+        else {
+            final_connections = forward_messages;
+        }
+        updateConnectionArrays();
+    }
+
+    function updateText() {
+        if (highlightBox.visible && layerNum[interID] === 1) {
+            if (weightsDisplayed) {
+                weightText.visible = true;
+                fwdMsgText.visible = false;
+            } else {
+                weightText.visible = false;
+                fwdMsgText.visible = true;
+            }
+        }
+        else {
+            weightText.visible = false;
+            fwdMsgText.visible = false;
+        }
     }
 
     function updateEdges() {
@@ -217,12 +265,12 @@
         if (highlightBox.visible) {
             if (layerNum[interID] === 1) {
                 for (j = 0; j < nInputValues; j++) {
-                    let weight_norm = final_connections_normalized[j][posInsideLayer[interID]]
+                    let value_norm = final_connections_normalized[j][posInsideLayer[interID]]
 
                     lineGeom.vertices.push(new THREE.Vector3(posX[j], posY[j], posZ[j]));
                     lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
 
-                    colorNum = math.round(weight_norm * 99);
+                    colorNum = math.round(value_norm * 99);
                     r = redLookup[colorNum];
                     g = greenLookup[colorNum];
                     b = blueLookup[colorNum];
@@ -259,6 +307,20 @@
         objEdges.material.needsUpdate = true;
         objEdges.geometry.colorsNeedUpdate = true;
         objEdges.geometry.verticesNeedUpdate = true;
+
+        updateText();
+    }
+
+    function updateCubes() {
+        for (let c = 0; c < scene.children.length; c++) {
+            if (scene.children[c].name === 'cubes') {
+                let objCubes = scene.children[c];
+                objCubes.geometry.dispose();
+                break;
+            }
+        }
+
+        drawCubes();
     }
 
     function onWindowResize(e) {
@@ -358,15 +420,11 @@
         }).error(function () {
             console.log('error');
         }).done(function () {
-            setupConnectionArrays();
-            // createText(outs, 0, 0);
+            updateConnectionArrays();
             drawNodeLabels();
-            // createText(ins, 0, -130);
             drawCubes();
             drawEdges();
         });
-
-
     }
 
     function drawNodeLabels() {
