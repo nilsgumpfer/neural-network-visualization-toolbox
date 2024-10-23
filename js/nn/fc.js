@@ -1,8 +1,8 @@
-function setupWeightArrays() {
-    const absMax = deriveAbsMax2([final_weights, final_biases]);
+function setupConnectionArrays() {
+    final_connections = forward_messages
 
-    final_weights_normalized = normalizeMatrix(final_weights, absMax);
-    final_biases_normalized = normalizeMatrix(final_biases, absMax);
+    const absMax = deriveAbsMax2([final_connections, final_biases]);
+    final_connections_normalized = normalizeMatrix(final_connections, absMax);
 }
 
 

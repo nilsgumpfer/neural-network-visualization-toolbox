@@ -80,8 +80,9 @@
     var allNodeOutputsNormalized = new Array(nNodes);
     var finalOutputID = 0;
     var isComputed = false;
-    var final_weights_normalized;
-    var final_biases_normalized;
+    var weightsDisplayed = false;
+    var final_connections;
+    var final_connections_normalized;
     var final_outputs_normalized;
     var input_data_normalized;
     var final_outputs_wo_act_normalized;
@@ -165,6 +166,20 @@
         stats.domElement.style.right = '0px';
         container.appendChild(stats.domElement);
 
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'w' || event.key === 'W') {
+                if (weightsDisplayed) {
+                    final_connections = forward_messages;
+                    weightsDisplayed = false;
+                }
+                else {
+                    final_connections = final_weights;
+                    weightsDisplayed = true;
+                }
+                final_connections_normalized = normalizeMatrix(final_connections, deriveAbsMax(final_connections));
+            }
+        });
+
         renderer.domElement.addEventListener('mousemove', onMouseMove);
         renderer.domElement.addEventListener('mousedown', onMouseDown);
         renderer.domElement.addEventListener('click', onClick);
@@ -202,7 +217,7 @@
         if (highlightBox.visible) {
             if (layerNum[interID] === 1) {
                 for (j = 0; j < nInputValues; j++) {
-                    let weight_norm = final_weights_normalized[j][posInsideLayer[interID]]
+                    let weight_norm = final_connections_normalized[j][posInsideLayer[interID]]
 
                     lineGeom.vertices.push(new THREE.Vector3(posX[j], posY[j], posZ[j]));
                     lineGeom.vertices.push(new THREE.Vector3(posX[interID], posY[interID], posZ[interID]));
@@ -343,7 +358,7 @@
         }).error(function () {
             console.log('error');
         }).done(function () {
-            setupWeightArrays();
+            setupConnectionArrays();
             // createText(outs, 0, 0);
             drawNodeLabels();
             // createText(ins, 0, -130);
@@ -361,47 +376,49 @@
     }
 
     function updateInfoBox() {
-        let infobox = document.getElementById("infobox");
+        if(interID) {
+            let infobox = document.getElementById("infobox");
 
-        let nodeType;
-        if (layerNum[interID] === 0) {
-            nodeType = "Input layer";
-        } else if (layerNum[interID] === 1) {
-            nodeType = "Output layer (raw values)";
-        } else if (layerNum[interID] === 2) {
-            nodeType = "Output layer (softmax)";
-        }
-        $("#nodeType").html(nodeType + ", unit " + nodeLabels[interID]);
-
-        let weights = []
-        if (layerNum[interID] === 1) {
-            for (let i = 0; i < nInputValues; i++) {
-                weights[i] = " " + final_weights[i][posInsideLayer[interID]].toFixed(1);
+            let nodeType;
+            if (layerNum[interID] === 0) {
+                nodeType = "Input layer";
+            } else if (layerNum[interID] === 1) {
+                nodeType = "Output layer (raw values)";
+            } else if (layerNum[interID] === 2) {
+                nodeType = "Output layer (softmax)";
             }
-        }
-        let forwardMessages = []
-        if (layerNum[interID] === 1){
-            for (let i = 0; i < nInputValues; i++) {
-                forwardMessages[i] = " "+forward_messages[i][posInsideLayer[interID]].toFixed(1);
-            }
-        }
-        let bias;
-        if (layerNum[interID] === 1)
-            bias = final_biases[0][posInsideLayer[interID]].toFixed(1);
-        else
-            bias = "-"
-        // let input = allNodeInputs[interID].toFixed(1);
-        let output = allNodeOutputs[interID].toFixed(1);
+            $("#nodeType").html(nodeType + ", unit " + nodeLabels[interID]);
 
-        // document.getElementById("nodeInput").textContent = "" + input;
-        document.getElementById("nodeWeights").textContent = "[ " + weights + " ]";
-        document.getElementById("nodeForwardMessages").textContent = "[ " + forwardMessages + " ]";
-        document.getElementById("nodeBias").textContent = "" + bias;
-        document.getElementById("nodeOutput").textContent = "" + output;
-        // let r = 0;
-        // let g = 0;
-        // let b = 0;
-        // document.getElementById("nodeOutput").style.color = "rgb(" + r + "," + g + "," + b + ")";
+            let weights = []
+            if (layerNum[interID] === 1) {
+                for (let i = 0; i < nInputValues; i++) {
+                    weights[i] = " " + final_connections[i][posInsideLayer[interID]].toFixed(1);
+                }
+            }
+            let forwardMessages = []
+            if (layerNum[interID] === 1) {
+                for (let i = 0; i < nInputValues; i++) {
+                    forwardMessages[i] = " " + forward_messages[i][posInsideLayer[interID]].toFixed(1);
+                }
+            }
+            let bias;
+            if (layerNum[interID] === 1)
+                bias = final_biases[0][posInsideLayer[interID]].toFixed(1);
+            else
+                bias = "-"
+            // let input = allNodeInputs[interID].toFixed(1);
+            let output = allNodeOutputs[interID].toFixed(1);
+
+            // document.getElementById("nodeInput").textContent = "" + input;
+            document.getElementById("nodeWeights").textContent = "[ " + weights + " ]";
+            document.getElementById("nodeForwardMessages").textContent = "[ " + forwardMessages + " ]";
+            document.getElementById("nodeBias").textContent = "" + bias;
+            document.getElementById("nodeOutput").textContent = "" + output;
+            // let r = 0;
+            // let g = 0;
+            // let b = 0;
+            // document.getElementById("nodeOutput").style.color = "rgb(" + r + "," + g + "," + b + ")";
+        }
     }
 
 </script>
